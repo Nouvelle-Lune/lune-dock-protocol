@@ -8,7 +8,7 @@ The installed Pi distribution uses `@earendil-works/pi-tui` for its native `Comp
 ## Installation
 
 ```sh
-npm install lune-dock-protocol
+npm install @nouvelle-lune/lune-dock-protocol
 ```
 
 ## Core contract
@@ -69,7 +69,7 @@ Import `createDockContribution` from the package root. It registers the plugin's
 its existing standalone UI available when the Dock host is absent or disabled.
 
 ```ts
-import { createDockContribution } from "lune-dock-protocol";
+import { createDockContribution } from "@nouvelle-lune/lune-dock-protocol";
 import { truncateToWidth } from "@earendil-works/pi-tui";
 
 const dock = createDockContribution({
@@ -104,7 +104,7 @@ Import `getDockRegistry` from the `/host` entry point. Attach the host to the cu
 read the registered contributions when rendering:
 
 ```ts
-import { getDockRegistry } from "lune-dock-protocol/host";
+import { getDockRegistry } from "@nouvelle-lune/lune-dock-protocol/host";
 
 const registry = getDockRegistry();
 const releaseHost = registry.attachHost(ctx.ui, {
