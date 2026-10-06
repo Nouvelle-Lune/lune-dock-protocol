@@ -1,4 +1,4 @@
-# Lune Protocol v1 — Draft 3
+# Lune Dock Protocol v1
 
 Plugin owns presentation. Dock owns placement.
 
