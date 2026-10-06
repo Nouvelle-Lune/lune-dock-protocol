@@ -19,6 +19,9 @@
         "CHANGELOG.md",
         "LICENSE"
     ],
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
         "typecheck": "tsc --noEmit",
         "test": "node --experimental-strip-types --test 'test/**/*.test.ts'"

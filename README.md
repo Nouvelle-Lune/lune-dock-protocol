@@ -5,6 +5,12 @@ Plugin owns presentation. Dock owns placement.
 This library connects plugin-owned Pi TUI presentations to the optional Lune Dock host.
 The installed Pi distribution uses `@earendil-works/pi-tui` for its native `Component` type.
 
+## Installation
+
+```sh
+npm install @nouvelle-lune/pi-dock-protocol
+```
+
 ## Core contract
 
 ```ts

@@ -4,7 +4,7 @@
 
 ### Added
 
-- **Lune Protocol v1 Draft 3 contract.** `LuneDockSnapshot`, `LuneDockProvider` and `LuneDockHost`
+- **Lune Dock Protocol v1 contract.** `LuneDockSnapshot`, `LuneDockProvider` and `LuneDockHost`
   describe the optional single-line dock integration: plugins own their presentation Components,
   the host owns placement, selection and width allocation.
 
@@ -14,3 +14,7 @@
 
 - **Optional Pi lifecycle adapter.** `createDockContribution` keeps independent plugin UI usable when
   the host is absent or disabled, and owns host-presence handling, attachment order and detachment.
+
+### Changed
+
+- **Public npm package setup.** Document installation in the README and set the scoped package to publish with public access.
