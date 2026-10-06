@@ -17,4 +17,4 @@
 
 ### Changed
 
-- **Public npm package setup.** Document installation in the README and set the scoped package to publish with public access.
+- **Public npm package.** Use the unscoped name `lune-dock-protocol`, document its installation and host/contributor usage, and configure public access.

@@ -8,7 +8,7 @@ The installed Pi distribution uses `@earendil-works/pi-tui` for its native `Comp
 ## Installation
 
 ```sh
-npm install @nouvelle-lune/pi-dock-protocol
+npm install lune-dock-protocol
 ```
 
 ## Core contract
@@ -61,14 +61,15 @@ allocation, spacing and focus belong to Dock. Snapshot schema contains no busine
 width metadata, visibility or ordering. Snapshot Components stay in process memory and are
 never persisted. Plugins restore business state before generating current snapshots.
 
-## Optional Pi lifecycle adapter
+## Usage
 
-`createDockContribution` is a convenience adapter outside the core provider schema. It keeps
-existing independent UI available when the host is absent or disabled, scopes registration to
-`ctx.ui`, and exposes a provider with the core contract above.
+### Contribute from a Pi extension
+
+Import `createDockContribution` from the package root. It registers the plugin's snapshots and keeps
+its existing standalone UI available when the Dock host is absent or disabled.
 
 ```ts
-import { createDockContribution } from "@nouvelle-lune/pi-dock-protocol";
+import { createDockContribution } from "lune-dock-protocol";
 import { truncateToWidth } from "@earendil-works/pi-tui";
 
 const dock = createDockContribution({
@@ -80,23 +81,47 @@ const dock = createDockContribution({
         },
     }),
     activate: (ctx) => openMyPanel(ctx),
-    standalone: myExistingStatusBar, // setCtx(ctx), render(), clear()
+    standalone: {
+        setCtx: (ctx) => myExistingStatusBar.setCtx(ctx),
+        render: () => myExistingStatusBar.render(),
+        clear: () => myExistingStatusBar.clear(),
+    },
 });
-
-dock.detach({ retired: true }); // Before replacing/restoring business state.
-dock.attach(ctx);               // After restoration, even when idle.
-dock.refresh();                 // Publish a complete replacement on presentation changes.
-dock.detach();                  // Before shutdown/reset.
 ```
 
-Hidden plugins keep publishing. An idle plugin supplies a meaningful base rather than returning
-undefined. `refresh({ summaryChanged: false })` skips snapshot publication for changes that do
-not affect any level while still updating independent UI. `clear()` must stop standalone timers
-even when its context has retired. Detachment is idempotent and ignores stale publication callbacks.
+Restore the plugin's state before `dock.attach(ctx)`, including when the plugin is idle. Call
+`dock.refresh()` when that state changes, and `dock.detach()` before resetting or shutting down the
+session. Pass `{ retired: true }` when replacing a context Pi has retired. `activate(ctx)` opens the
+plugin's interactive UI; the snapshot Components only render the dock presentation.
 
-Host infrastructure is exported separately from `@nouvelle-lune/pi-dock-protocol/host`.
-`getDockRegistry().getHost(ctx.ui)` discovers a compatible host with `protocolVersion` and
-`register(provider)`. The adapter supports both extension startup orders using presence callbacks.
-The shared discovery registry uses `Symbol.for("nouvelle-lune.lune-protocol.v1")`, isolated by
-runner UI scope; duplicate IDs or active hosts throw. A host reattachment obtains current
-snapshots through `getSnapshot()`. The old DockItem/status/color/order contract is removed.
+The adapter handles host discovery and either startup order. If a host is present, it clears the
+standalone UI; if the host is absent, it renders that UI. `refresh({ summaryChanged: false })` is
+for changes that update the standalone UI but do not change any snapshot level.
+
+### Implement a Dock host
+
+Import `getDockRegistry` from the `/host` entry point. Attach the host to the current `ctx.ui`, then
+read the registered contributions when rendering:
+
+```ts
+import { getDockRegistry } from "lune-dock-protocol/host";
+
+const registry = getDockRegistry();
+const releaseHost = registry.attachHost(ctx.ui, {
+    invalidate: () => scheduleDockRender(),
+});
+
+function renderDock() {
+    for (const { id, snapshot } of registry.getContributions(ctx.ui)) {
+        renderContribution(id, snapshot);
+    }
+}
+
+// Call releaseHost() when the host shuts down.
+```
+
+The host object supplies `invalidate()` to schedule a render. Each contribution has an `id` and a
+complete `snapshot`; the host chooses visibility, ordering, display mode and width. `ctx.ui` scopes
+registrations to one Pi runner. Use `registry.getHost(ctx.ui)` only when implementing a custom
+contributor that needs to discover an attached host directly; `createDockContribution` handles that
+for you.

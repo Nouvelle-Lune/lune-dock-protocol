@@ -1,7 +1,7 @@
 {
-    "name": "@nouvelle-lune/pi-dock-protocol",
+    "name": "lune-dock-protocol",
     "version": "0.1.0",
-    "description": "Shared scoped registry and contribution contract for the Lune dock",
+    "description": "Shared registry and contribution contract for the Lune dock",
     "type": "module",
     "exports": {
         ".": {
