@@ -17,4 +17,4 @@
 
 ### Changed
 
-- **Public npm package.** Use `@nouvelle-lune/lune-dock-protocol`, document its installation and host/contributor usage, and configure public access.
+- **Public npm package.** Publish as `@lune_99/lune-dock-protocol`, with its installation and host/contributor usage documented and public access configured.

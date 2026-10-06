@@ -1,5 +1,5 @@
 {
-    "name": "@nouvelle-lune/lune-dock-protocol",
+    "name": "@lune_99/lune-dock-protocol",
     "version": "0.1.0",
     "description": "Shared registry and contribution contract for the Lune dock",
     "type": "module",
